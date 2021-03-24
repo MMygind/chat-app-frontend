@@ -8,7 +8,7 @@
         <div *ngIf="clients$ | async as clients">
           <ul>
             <li *ngFor="let client of clients">
-              {{client.nickName}}
+              {{client.name}}
             </li>
           </ul>
         </div>
@@ -18,14 +18,14 @@
   <div class="col-8">
     <div class="card h-100">
       <div class="card-header">
-        <h5>Hello {{chatClient.nickName}}</h5>
+        <h5>Hello {{chatClient.name}}</h5>
       </div>
       <div class="card-body scroll">
         <h6 *ngFor="let message of messages">
           <div class="card">
             <div class="card-body">
               <span style="font-weight: bold">
-                {{message.date | date: 'h:mm a'}}: {{message.chatClient?.nickName}}:
+                {{message.date | date: 'h:mm a'}}: {{message.chatClient?.name}}:
               </span>
               {{message.message}}
             </div>
@@ -45,7 +45,7 @@
             style="color: burlywood">
           Clients Typing:
           <span *ngFor="let client of clientsTyping; let i = index">
-        {{client.nickName}}
+        {{client.name}}
             <span *ngIf="clientsTyping.length - 1 > i">, </span>
           </span>
         </span>

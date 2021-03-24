@@ -24,7 +24,7 @@ export class ChatComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.error$ = this.chatService.listenForError().pipe(takeUntil(this.unsubscribe$));
-    this.clients$ = this.chatService.listenForClients();
+
     this.message.valueChanges
       .pipe(
         takeUntil(this.unsubscribe$),
@@ -33,6 +33,9 @@ export class ChatComponent implements OnInit, OnDestroy {
       .subscribe((value) => {
         this.chatService.sendTyping(value.length > 0);
       });
+
+    this.clients$ = this.chatService.listenForClients();
+
     this.chatService.listenForMessages()
       .pipe(
         takeUntil(this.unsubscribe$)
@@ -61,7 +64,7 @@ export class ChatComponent implements OnInit, OnDestroy {
         this.chatClient = this.chatService.chatClient = welcome.client;
       });
     if (this.chatService.chatClient) {
-      this.chatService.sendNickName(this.chatService.chatClient.nickName);
+      this.chatService.sendName(this.chatService.chatClient.name);
     }
   }
 
@@ -78,7 +81,7 @@ export class ChatComponent implements OnInit, OnDestroy {
 
   sendNickName(): void {
     if (this.nickNameFc.value) {
-      this.chatService.sendNickName(this.nickNameFc.value);
+      this.chatService.sendName(this.nickNameFc.value);
     }
   }
 }

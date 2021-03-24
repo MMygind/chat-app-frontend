@@ -50,8 +50,8 @@ export class ChatService {
     return this.socket
       .fromEvent<ChatMessage[]>('allMessages');
   }
-  sendNickName(nickname: string): void {
-    this.socket.emit('nickname', nickname);
+  sendName(name: string): void {
+    this.socket.emit('name', name);
   }
   disconnect(): void {
     this.socket.disconnect();
