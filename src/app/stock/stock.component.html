@@ -1,0 +1,29 @@
+<div [formGroup]="stockFb" *ngIf="!stockCreate">
+  <h3>New Stock</h3>
+
+  <label>
+    Name:
+    <input type="text" formControlName="stockName" id="name">
+  </label>
+
+  <label>
+    Description:
+    <input type="text" formControlName="description">
+  </label>
+
+  <label>
+    Start Value:
+    <input type="number" formControlName="initValue">
+  </label>
+
+  <label>
+    Current Value:
+    <input type="number" formControlName="currValue">
+  </label>
+  <button type="button" (click)="sendStock()" >Send</button>
+</div>
+<h4 *ngIf="error" style="color: #8b0000">{{error}}</h4>
+<div *ngIf="stockCreate">
+  {{stockCreate | json}}
+  <button (click)="stockCreate = undefined">Yeahhhhhhh!</button>
+</div>
