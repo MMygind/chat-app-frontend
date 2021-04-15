@@ -5,6 +5,9 @@ import {Observable, Subject, Subscription} from 'rxjs';
 import {debounceTime, take, takeUntil} from 'rxjs/operators';
 import {ChatClient} from './shared/chat-client.model';
 import {ChatMessage} from './shared/chat-message.model';
+import {JoinChatDto} from './shared/join-chat.dto';
+import {StorageService} from '../shared/storage.service';
+import {SendMessageDto} from './shared/send-message.dto';
 
 @Component({
   selector: 'app-chat',
@@ -20,7 +23,9 @@ export class ChatComponent implements OnInit, OnDestroy {
   clients$: Observable<ChatClient[]> | undefined;
   chatClient: ChatClient | undefined;
   error$: Observable<string> | undefined;
-  constructor(private chatService: ChatService) { }
+  socketId: string | undefined;
+  constructor(private chatService: ChatService,
+              private storageService: StorageService) { }
 
   ngOnInit(): void {
     this.error$ = this.chatService.listenForError().pipe(takeUntil(this.unsubscribe$));
@@ -61,11 +66,28 @@ export class ChatComponent implements OnInit, OnDestroy {
       )
       .subscribe(welcome => {
         this.messages = welcome.messages;
-        this.chatClient = this.chatService.chatClient = welcome.client;
+        this.chatClient = welcome.client;
+        this.storageService.saveChatClient(this.chatClient);
       });
-    if (this.chatService.chatClient) {
-      this.chatService.sendName(this.chatService.chatClient.name);
+    const oldClient = this.storageService.loadChatClient();
+    if (oldClient) {
+      this.chatService.joinChat({id: oldClient.id, name: oldClient.name});
     }
+    this.chatService.listenForConnect()
+      .pipe(
+        takeUntil(this.unsubscribe$)
+      )
+      .subscribe((id) => {
+        this.socketId = id;
+      });
+
+    this.chatService.listenForDisconnect()
+      .pipe(
+        takeUntil(this.unsubscribe$)
+      )
+      .subscribe((id) => {
+        this.socketId = id;
+      });
   }
 
   ngOnDestroy(): void {
@@ -75,13 +97,18 @@ export class ChatComponent implements OnInit, OnDestroy {
 
   sendMessage(): void {
     console.log(this.message.value);
-    this.chatService.sendMessage(this.message.value);
+    const sendMessageDto: SendMessageDto = {
+      chatClientId: this.chatClient.id,
+      message: this.message.value
+    };
+    this.chatService.sendMessage(sendMessageDto);
     this.message.patchValue('');
   }
 
   sendNickName(): void {
     if (this.nickNameFc.value) {
-      this.chatService.sendName(this.nickNameFc.value);
+      const dto: JoinChatDto = {name: this.nickNameFc.value};
+      this.chatService.joinChat(dto);
     }
   }
 }

@@ -21,6 +21,8 @@
     "@angular/platform-browser-dynamic": "~10.2.0",
     "@angular/router": "~10.2.0",
     "@ng-bootstrap/ng-bootstrap": "^8.0.4",
+    "@ngxs/logger-plugin": "^3.7.1",
+    "@ngxs/store": "^3.7.1",
     "bootstrap": "^4.5.0",
     "ngx-socket-io": "^3.2.0",
     "rxjs": "~6.6.0",

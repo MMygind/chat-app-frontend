@@ -2,6 +2,8 @@ import {Injectable} from '@angular/core';
 import {Socket} from 'ngx-socket-io';
 import {StockMoney} from './stock-money.model';
 import {SocketStock} from '../../app.module';
+import {Observable} from 'rxjs';
+import {StockDto} from './stock.dto';
 
 @Injectable({
   providedIn: 'root'
@@ -13,5 +15,13 @@ export class StockService {
 
   sendStock(stock: StockMoney): void {
     this.socket.emit('stock', stock);
+  }
+
+  listenForStocks(): Observable<StockMoney[]> {
+    return this.socket.fromEvent<StockMoney[]>('stocks');
+  }
+
+  listenForStockDto(): void {
+    this.socket.emit('welcomeStock');
   }
 }

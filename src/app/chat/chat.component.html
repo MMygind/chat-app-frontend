@@ -1,3 +1,9 @@
+<div *ngIf="error$ | async as error" style="color: darkred">
+  {{error}}
+</div>
+<div *ngIf="!socketId" style="color: darkred" align="center">
+  You are not connected!
+</div>
 <div class="row vh-100" style="padding-top: 30px; padding-bottom: 20px" *ngIf="chatClient">
   <div class="col-4">
     <div class="card h-100">
@@ -18,7 +24,7 @@
   <div class="col-8">
     <div class="card h-100">
       <div class="card-header">
-        <h5>Hello {{chatClient.name}}</h5>
+        <h5>Hello {{chatClient.name}} {{chatClient.id}}</h5>
       </div>
       <div class="card-body scroll">
         <h6 *ngFor="let message of messages">

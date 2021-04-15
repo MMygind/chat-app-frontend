@@ -1,20 +1,20 @@
 import { Injectable } from '@angular/core';
-import {Socket} from 'ngx-socket-io';
 import {Observable} from 'rxjs';
 import {ChatClient} from './chat-client.model';
 import {ChatMessage} from './chat-message.model';
 import {WelcomeDto} from './welcome.dto';
 import {SocketChat} from '../../app.module';
+import {map} from 'rxjs/operators';
+import {JoinChatDto} from './join-chat.dto';
+import {SendMessageDto} from './send-message.dto';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ChatService {
-  chatClient: ChatClient | undefined;
-
   constructor(private socket: SocketChat) { }
 
-  sendMessage(msg: string): void {
+  sendMessage(msg: SendMessageDto): void {
     this.socket.emit('message', msg);
   }
 
@@ -47,12 +47,32 @@ export class ChatService {
       .fromEvent<string>('error');
   }
 
+  listenForConnect(): Observable<string> {
+    return this.socket
+      .fromEvent<string>('connect')
+      .pipe(
+        map(() => {
+          return this.socket.ioSocket.id;
+        })
+      );
+  }
+
+  listenForDisconnect(): Observable<string> {
+    return this.socket
+      .fromEvent<string>('disconnect')
+      .pipe(
+        map(() => {
+          return this.socket.ioSocket.id;
+        })
+      );
+  }
+
   getAllMessages(): Observable<ChatMessage[]> {
     return this.socket
       .fromEvent<ChatMessage[]>('allMessages');
   }
-  sendName(name: string): void {
-    this.socket.emit('name', name);
+  joinChat(dto: JoinChatDto): void {
+    this.socket.emit('joinChat', dto);
   }
   disconnect(): void {
     this.socket.disconnect();
