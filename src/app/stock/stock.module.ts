@@ -4,6 +4,8 @@ import { CommonModule } from '@angular/common';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {StockComponent} from './stock.component';
 import {StockRoutingModule} from './stock-routing.module';
+import {StockState} from './state/stock.state';
+import {NgxsModule} from '@ngxs/store';
 
 
 @NgModule({
@@ -12,7 +14,8 @@ import {StockRoutingModule} from './stock-routing.module';
     CommonModule,
     ReactiveFormsModule,
     FormsModule,
-    StockRoutingModule
+    StockRoutingModule,
+    NgxsModule.forFeature([StockState])
   ]
 })
 export class StockModule { }

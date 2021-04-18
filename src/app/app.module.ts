@@ -7,6 +7,10 @@ import {Socket, SocketIoModule} from 'ngx-socket-io';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import {NgxsModule} from '@ngxs/store';
 import {environment} from '../environments/environment';
+import {NgxsLoggerPluginModule} from '@ngxs/logger-plugin';
+import {StockState} from './stock/state/stock.state';
+import {NgxsReduxDevtoolsPluginModule} from '@ngxs/devtools-plugin';
+import {NgxsStoragePluginModule} from '@ngxs/storage-plugin';
 
 @Injectable()
 export class SocketChat extends Socket {
@@ -35,6 +39,14 @@ export class SocketStock extends Socket {
     NgbModule,
     NgxsModule.forRoot([], {
       developmentMode: !environment.production
+    }),
+    NgxsModule.forRoot([], {
+      developmentMode: !environment.production
+    }),
+    NgxsLoggerPluginModule.forRoot(),
+    NgxsReduxDevtoolsPluginModule.forRoot(),
+    NgxsStoragePluginModule.forRoot({
+      key: StockState
     })
   ],
   providers: [SocketChat, SocketStock],

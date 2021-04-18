@@ -4,6 +4,9 @@ import {FormBuilder, FormControl} from '@angular/forms';
 import {StockMoney} from './shared/stock-money.model';
 import {Observable, Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
+import {Select, Store} from '@ngxs/store';
+import {StockState} from './state/stock.state';
+import {ListenForStocks} from './state/stock.actions';
 
 @Component({
   selector: 'app-chat',
@@ -12,6 +15,8 @@ import {takeUntil} from 'rxjs/operators';
 })
 
 export class StockComponent implements OnInit, OnDestroy {
+  @Select(StockState.stocks) stockClients$: Observable<StockMoney[]> | undefined;
+
   stockFb = this.fb.group({
     stockName: [''],
     initValue: [],
@@ -24,9 +29,10 @@ export class StockComponent implements OnInit, OnDestroy {
   unsubscribe$ = new Subject();
   selectedStock: StockMoney;
 
-  constructor(private stockService: StockService, private fb: FormBuilder) { }
+  constructor(private stockService: StockService, private fb: FormBuilder, private store: Store) { }
 
   ngOnInit(): void {
+    this.store.dispatch(new ListenForStocks());
     this.stocks$ = this.stockService.listenForStocks();
 
     this.stockService.listenForStockDto();
