@@ -33,9 +33,12 @@
         <h5>
           Description: {{selectedStock.description}}
         </h5>
-        <label>
-          <input type="number" value="{{selectedStock.currValue}}">
-        </label>
+        <div [formGroup]="updateFc">
+          <label>
+            <input type="number" formControlName="value">
+          </label>
+        </div>
+        <button type="button" (click)="updateStock()">Update Price</button>
         <h6>
           Initial value: {{selectedStock.initValue}} DKK
         </h6>

@@ -17,6 +17,10 @@ export class StockService {
     this.socket.emit('stock', stock);
   }
 
+  updateStock(id: string, updateStock: StockMoney): void {
+    this.socket.emit('updateStock', updateStock);
+  }
+
   listenForStocks(): Observable<StockMoney[]> {
     return this.socket.fromEvent<StockMoney[]>('stocks');
   }

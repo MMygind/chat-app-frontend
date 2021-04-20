@@ -23,6 +23,11 @@ export class StockComponent implements OnInit, OnDestroy {
     currValue: [],
     description: [''],
   });
+
+  updateFc = this.fb.group({
+    value: [],
+  });
+
   stockCreate: StockMoney | undefined;
   error: string | undefined;
   stocks$: Observable<StockMoney[]> | undefined;
@@ -44,6 +49,19 @@ export class StockComponent implements OnInit, OnDestroy {
   sendStock(): void {
     const stockDto: StockMoney = this.stockFb.value;
     this.stockService.sendStock(stockDto);
+  }
+
+  updateStock(): void {
+    if (this.selectedStock)
+    {
+      this.stockService.updateStock(this.selectedStock.id, {
+        id: this.selectedStock.id,
+        currValue: this.updateFc.value.value,
+        description: this.selectedStock.description,
+        initValue: this.selectedStock.initValue,
+        stockName: this.selectedStock.stockName
+      });
+    }
   }
 
   onSelect(stock: StockMoney): void {
